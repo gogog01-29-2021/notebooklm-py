@@ -123,6 +123,7 @@ All generate commands support:
 |---------|---------|---------|
 | `audio [description]` | `--format [deep-dive\|brief\|critique\|debate]`, `--length [short\|default\|long]`, `--wait` | `generate audio "Focus on history"` |
 | `video [description]` | `--format [explainer\|brief]`, `--style [auto\|classic\|whiteboard\|kawaii\|anime\|watercolor\|retro-print\|heritage\|paper-craft]`, `--wait` | `generate video "Explainer for kids"` |
+| `cinematic-video [description]` | `--language`, `-s/--source`, `--wait`, `--retry` | `generate cinematic-video "documentary about climate"` |
 | `slide-deck [description]` | `--format [detailed\|presenter]`, `--length [default\|short]`, `--wait` | `generate slide-deck` |
 | `revise-slide <description>` | `-a/--artifact <id>` (required), `--slide N` (required), `--wait` | `generate revise-slide "Move title up" --artifact <id> --slide 0` |
 | `quiz [description]` | `--difficulty [easy\|medium\|hard]`, `--quantity [fewer\|standard\|more]`, `--wait` | `generate quiz --difficulty hard` |
@@ -151,6 +152,7 @@ All generate commands support:
 |---------|-----------|---------|---------|
 | `audio [path]` | Output path | `-a/--artifact`, `--all`, `--latest`, `--name`, `--force`, `--dry-run` | `download audio --all` |
 | `video [path]` | Output path | `-a/--artifact`, `--all`, `--latest`, `--name`, `--force`, `--dry-run` | `download video --latest` |
+| `cinematic-video [path]` | Output path | `-a/--artifact`, `--all`, `--latest`, `--name`, `--force`, `--dry-run` | `download cinematic-video --latest` |
 | `slide-deck [path]` | Output path      | `-a/--artifact`, `--all`, `--latest`, `--name`, `--force`, `--dry-run`, `--format [pdf\|pptx]` | `download slide-deck ./slides.pdf` |
 | `infographic [path]` | Output path | `-a/--artifact`, `--all`, `--latest`, `--name`, `--force`, `--dry-run` | `download infographic ./info.png` |
 | `report [path]` | Output path | `-a/--artifact`, `--all`, `--latest`, `--name`, `--force`, `--dry-run` | `download report ./report.md` |
@@ -547,6 +549,35 @@ notebooklm generate video -s src_123 -s src_456
 
 # JSON output for scripting/automation
 notebooklm generate video --json
+```
+
+### Generate: `cinematic-video`
+
+Generate a cinematic video overview using AI-generated documentary-style footage (Veo 3). Unlike standard video overviews, cinematic videos do not accept a `--style` option. Requires a Google AI Ultra subscription.
+
+```bash
+notebooklm generate cinematic-video [description] [OPTIONS]
+```
+
+**Options:**
+- `--language LANG` - Language code
+- `-s, --source ID` - Use specific source(s) (repeatable, uses all if not specified)
+- `--wait` - Wait for generation to complete
+- `--retry N` - Number of retries on rate limits
+- `--json` - Output as JSON (returns `task_id` and `status`)
+
+**Note:** Generation takes approximately 30–40 minutes due to Veo 3 rendering.
+
+**Examples:**
+```bash
+# Generate with a description
+notebooklm generate cinematic-video "documentary about climate change"
+
+# Generate and wait for completion
+notebooklm generate cinematic-video --wait
+
+# JSON output for scripting
+notebooklm generate cinematic-video --json
 ```
 
 ### Generate: `revise-slide`

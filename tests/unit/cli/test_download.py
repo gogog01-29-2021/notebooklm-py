@@ -169,6 +169,48 @@ class TestDownloadVideo:
 
 
 # =============================================================================
+# DOWNLOAD CINEMATIC VIDEO TESTS
+# =============================================================================
+
+
+class TestDownloadCinematicVideo:
+    def test_download_cinematic_video(self, runner, mock_auth, tmp_path):
+        """cinematic-video is an alias for video — same callback and artifact type."""
+        with patch_client_for_module("download") as mock_client_cls:
+            mock_client = create_mock_client()
+
+            output_file = tmp_path / "cinematic.mp4"
+
+            async def mock_download_video(notebook_id, output_path, artifact_id=None):
+                Path(output_path).write_bytes(b"fake cinematic video content")
+                return output_path
+
+            mock_client.artifacts.list = AsyncMock(
+                return_value=[make_artifact("cin_1", "My Cinematic Video", 3)]
+            )
+            mock_client.artifacts.download_video = mock_download_video
+            mock_client_cls.return_value = mock_client
+
+            with (
+                patch.object(download_module, "fetch_tokens", new_callable=AsyncMock) as mock_fetch,
+                patch.object(download_module, "load_auth_from_storage") as mock_load,
+            ):
+                mock_load.return_value = {"SID": "test", "HSID": "test", "SSID": "test"}
+                mock_fetch.return_value = ("csrf", "session")
+                result = runner.invoke(
+                    cli, ["download", "cinematic-video", str(output_file), "-n", "nb_123"]
+                )
+
+            assert result.exit_code == 0
+            assert output_file.exists()
+
+    def test_download_cinematic_video_command_exists(self, runner):
+        result = runner.invoke(cli, ["download", "cinematic-video", "--help"])
+        assert result.exit_code == 0
+        assert "cinematic" in result.output.lower()
+
+
+# =============================================================================
 # DOWNLOAD INFOGRAPHIC TESTS
 # =============================================================================
 

@@ -443,7 +443,7 @@ class ArtifactsAPI:
             [
                 None,
                 None,
-                3,  # ArtifactTypeCode.VIDEO
+                ArtifactTypeCode.VIDEO.value,
                 source_ids_triple,
                 None,
                 None,
@@ -478,10 +478,10 @@ class ArtifactsAPI:
         instead of the slide-deck animations used by standard video overviews.
         They do not accept VideoStyle options.
 
-        Requires a Google AI Ultra subscription. Uses the same CREATE_ARTIFACT
-        RPC as standard videos with VideoFormat.CINEMATIC (3). Parameter
-        structure verified against NotebookLM web UI network traffic
-        (March 2026).
+        Requires a Google AI Ultra subscription. Uses the CREATE_ARTIFACT RPC
+        with ArtifactTypeCode.VIDEO as the artifact type and
+        VideoFormat.CINEMATIC as the format specifier. Parameter structure
+        verified against NotebookLM web UI network traffic (March 2026).
 
         Note: Generation takes significantly longer than standard videos
         (~30-40 minutes) due to Veo 3 rendering.
